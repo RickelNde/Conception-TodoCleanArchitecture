@@ -11,11 +11,11 @@ public static class DependencyInjection
     {
         // cette ligne ajoute les validators
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddScoped<CreateTodoUseCase>();
-        services.AddScoped<DeleteTodoUseCase>();
+        ///services.AddScoped<CreateTodoUseCase>();
+      // services.AddScoped<DeleteTodoUseCase>();
         services.AddScoped<GetTodoUseCase>();
         services.AddScoped<GetAllTodosUseCase>();
-        services.AddScoped<ToggleTodoCompleteStatusUseCase>();
+       // services.AddScoped<ToggleTodoCompleteStatusUseCase>();
 
         return services;
     }

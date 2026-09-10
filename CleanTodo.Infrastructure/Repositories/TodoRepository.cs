@@ -17,7 +17,7 @@ public class TodoRepository : ITodoRepository
         return await _context.Todos.ToListAsync();
     }
 
-    public async Task<Todo> Add(Todo todo)
+    public async Task<Todo> AddTodo(Todo todo)
     {
         EntityEntry<Todo> newTodo = await _context.Todos.AddAsync(todo); // appelle la méthode AddAsync
         await _context.SaveChangesAsync(); // sauvegarde les changements dans la base de données
@@ -30,4 +30,21 @@ public class TodoRepository : ITodoRepository
             .Where(x => x.Id == id)
             .SingleOrDefaultAsync();
     }
+    public async Task<Todo> UpdateTodo(Todo todo)
+    {
+        _context.Todos.Update(todo);
+        await _context.SaveChangesAsync();
+        return todo;
+    }
+
+    public async Task DeleteTodo(Guid id)
+    {
+        var todo = await FindById(id);
+        if (todo is null)
+            return;
+
+        _context.Todos.Remove(todo);
+        await _context.SaveChangesAsync();
+    }
+
 }

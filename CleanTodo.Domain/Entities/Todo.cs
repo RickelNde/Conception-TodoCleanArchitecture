@@ -7,6 +7,7 @@ public class Todo
     public bool IsCompleted { get; set; }
     public DateTime Date { get; set; }
 
+    public DateTime CompletedOn { get; set; }
     /// <summary>
     /// Constructeur qui crée mon guid, date
     /// </summary>
