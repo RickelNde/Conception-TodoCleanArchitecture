@@ -11,7 +11,7 @@ namespace CleanTodo.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "users",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -24,7 +24,7 @@ namespace CleanTodo.Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "User",
+                table: "users",
                 columns: new[] { "Id", "Username", "Password" },
                 values: new object[] { Guid.NewGuid(), "root", "root" }
             );
@@ -34,7 +34,7 @@ namespace CleanTodo.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "User");
+                name: "users");
         }
     }
 }

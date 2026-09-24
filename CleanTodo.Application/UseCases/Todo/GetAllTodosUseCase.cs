@@ -3,11 +3,11 @@ using CleanTodo.Domain.Interfaces.Repositories;
 
 namespace CleanTodo.Application.UseCase;
 
-public class GetAllTodosUseCase
+public class GetAllUsersUseCase
 {
     private readonly ITodoRepository _todoRepository;
 
-    public GetAllTodosUseCase(ITodoRepository todoRepository)
+    public GetAllUsersUseCase(ITodoRepository todoRepository)
     {
         _todoRepository = todoRepository;
     }
