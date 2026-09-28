@@ -28,4 +28,8 @@ public class UserRepository : IUserRepository
         await _context.SaveChangesAsync(); // sauvegarde les changements dans la base de données
         return newUser.Entity; // retourne l'entité ajoutée.
     }
+    public async Task<User?> GetByUsernameAsync(string username)
+    {
+        return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+    }
 }

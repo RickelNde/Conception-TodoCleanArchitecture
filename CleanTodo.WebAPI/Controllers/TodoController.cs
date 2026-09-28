@@ -1,6 +1,7 @@
 using CleanTodo.Application.UseCase;
 using CleanTodo.Domain.DTOS;
 using CleanTodo.Domain.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -20,8 +21,9 @@ public class TodoController(GetAllUsersUseCase getAllUseCase, GetTodoUseCase get
 
     //Cadeau! pour le create. On utilise un CreatedAtAction qui retourne un code http 201 et un header location avec l'url du nouvel élément créé.
     //
-    [HttpPost]
-    public async Task<ActionResult<TodoDto>> Create([FromBody] CreateTodoDto createTodoDto)
+    [HttpPost("CreateTdo")]
+    [Authorize]
+    public async Task<ActionResult<TodoDto>> CreateTodo([FromBody] CreateTodoDto createTodoDto)
     {
         TodoDto todo = await _createUseCase.Execute(createTodoDto);
 

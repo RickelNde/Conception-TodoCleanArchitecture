@@ -1,5 +1,6 @@
 ﻿using CleanTodo.Application.UseCase;
 using CleanTodo.Application.UseCases.User;
+using CleanTodo.Infrastructure.Services;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -19,6 +20,7 @@ public static class DependencyInjection
         // services.AddScoped<ToggleTodoCompleteStatusUseCase>();
         services.AddScoped<LoginUseCase>();
         services.AddScoped<RegisterUseCase>();
+        services.AddScoped<JwtService>();
 
         return services;
     }

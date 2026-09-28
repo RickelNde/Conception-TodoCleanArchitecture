@@ -18,10 +18,9 @@ namespace CleanTodo.Infrastructure.Services // Adaptez le namespace selon votre 
 
         public string GenerateToken(string userId, string username)
         {
-            // Récupération des paramètres depuis la configuration (ou valeurs par défaut)
-            var secretKey = _config["Jwt:Key"] ?? "YourSuperSecretKey123888888888888ssssssss";
-            var issuer = _config["Jwt:Issuer"] ?? "your-app";
-            var audience = _config["Jwt:Audience"] ?? "your-app";
+            var secretKey = _config["JwtSetting:Key"] ?? "YourSuperSecretKey123888888888888ssssssss";
+            var issuer = _config["JwtSetting:Issuer"] ?? "yourdomain.com";
+            var audience = _config["JwtSetting:Audience"] ?? "yourdomain.com";
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
