@@ -8,4 +8,7 @@ public class NotFoundException : Exception
     {
         Id = id;
     }
+    public NotFoundException(string message) : base(message)
+    {
+    }
 }

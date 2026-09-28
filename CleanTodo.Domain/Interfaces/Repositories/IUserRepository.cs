@@ -10,5 +10,6 @@ namespace CleanTodo.Domain.Interfaces.Repositories
         Task<List<User>> GetAll();
         Task<User?> FindById(Guid id);
         Task<User> AddUser(User user);
+        Task<User?> GetByUsernameAsync(string username);
     }
 }
