@@ -109,6 +109,15 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = jwtSetting["Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSetting["Key"]!))
     };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            context.Token = context.Request.Cookies["AuthToken"];
+            return Task.CompletedTask;
+        }
+    };
 });
 
 // Add Authorization
@@ -127,8 +136,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 // L'authentification doit toujours venir AVANT l'autorisation
 app.UseAuthentication();
 app.UseAuthorization();

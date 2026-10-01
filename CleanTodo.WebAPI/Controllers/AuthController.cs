@@ -33,34 +33,55 @@ namespace CleanTodo.API.Controllers
 
 
         }
-
-   [HttpPost("login")]
-public async Task<IActionResult> Login([FromBody] LoginDTO login)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDTO login)
         {
             try
             {
                 var user = await loginUseCase.Execute(login);
 
-                // Générer le token
                 var token = _jwtService.GenerateToken(
                     user.Id.ToString(),
                     user.Username
                 );
 
-                // Retourner le token
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Lax,
+                    Expires = DateTimeOffset.UtcNow.AddHours(1)
+                };
+
+                Response.Cookies.Append("AuthToken", token, cookieOptions);
+
                 return Ok(new
                 {
-                    message = "Connexion réussie.",
-                    token = token
+                    message = "Connexion réussie",
+                    username = user.Username
                 });
             }
-            catch (NotFoundException)
+            catch (Exception)
             {
                 return Unauthorized(new
                 {
                     message = "Nom d'utilisateur ou mot de passe incorrect."
                 });
             }
+        }
+
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            
+            Response.Cookies.Delete("AuthToken", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Lax
+            });
+
+            return Ok(new { message = "Déconnexion réussie" });
         }
 
 
