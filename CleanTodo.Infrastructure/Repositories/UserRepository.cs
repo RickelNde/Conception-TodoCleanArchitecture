@@ -26,7 +26,7 @@ public class UserRepository : IUserRepository
     {
         EntityEntry<User> newUser = await _context.Users.AddAsync(user); // appelle la méthode AddAsync
         await _context.SaveChangesAsync(); // sauvegarde les changements dans la base de données
-        return newUser.Entity; // retourne l'entité ajoutée.
+        return newUser.Entity; // retourne l'entité ajoutée.////
     }
     public async Task<User?> GetByUsernameAsync(string username)
     {
