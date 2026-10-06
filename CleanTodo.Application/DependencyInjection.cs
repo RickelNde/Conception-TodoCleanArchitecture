@@ -1,4 +1,5 @@
 ﻿using CleanTodo.Application.UseCase;
+using CleanTodo.Application.UseCases;
 using CleanTodo.Application.UseCases.User;
 using CleanTodo.Infrastructure.Services;
 using FluentValidation;
@@ -21,6 +22,7 @@ public static class DependencyInjection
         services.AddScoped<LoginUseCase>();
         services.AddScoped<RegisterUseCase>();
         services.AddScoped<JwtService>();
+        services.AddScoped<DeleteTodoUseCase>();
 
         return services;
     }
