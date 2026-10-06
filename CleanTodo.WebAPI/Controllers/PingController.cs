@@ -12,7 +12,7 @@ namespace CleanTodo.API.Controllers
         public IActionResult Ping()
         {
 
-            return Ok(new { message = "Pong" });
+            return Ok(new {"Pong"});
         }
     }
 }
