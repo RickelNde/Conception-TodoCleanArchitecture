@@ -1,5 +1,6 @@
 ﻿using CleanTodo.Application.UseCase;
 using CleanTodo.Application.UseCases;
+using CleanTodo.Application.UseCases;
 using CleanTodo.Domain.DTOS;
 using CleanTodo.Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
@@ -10,13 +11,16 @@ namespace CleanTodo.API.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    public class ShipController(GetAllShipsUseCase getAllShipsUseCase,CreateShipUseCase createShipUseCase,GetShipUseCase getShipUseCase) : ControllerBase
+    public class ShipController(GetAllShipsUseCase getAllShipsUseCase,CreateShipUseCase createShipUseCase,UpdateShipUseCase updateShipUseCase, GetShipUseCase getShipUseCase,DeleteShipUseCase deleteShipUseCase) : ControllerBase
     {
         private GetAllShipsUseCase _getAllshipCase = getAllShipsUseCase;
      
         private CreateShipUseCase _createShipCase = createShipUseCase;
 
         private GetShipUseCase _getShipCase = getShipUseCase;
+
+        private DeleteShipUseCase _deleteShipUseCase = deleteShipUseCase;
+        private UpdateShipUseCase _updateShipUseCase = updateShipUseCase;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ShipDto>>> GetAll()
@@ -31,19 +35,47 @@ namespace CleanTodo.API.Controllers
             ShipDto ship = await createShipUseCase.Execute(createShipDto, createdBy);
 
             return CreatedAtAction(
-                nameof(Get),
+                nameof(GetId),
                 new { id = ship.Id },
                 ship);
 
         }
 
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
+        [HttpGet("GetShipId")]
+        public async Task<IActionResult> GetId(Guid id)
         {
             try
             {
                 ShipDto ship = await _getShipCase.Execute(id);
+                return Ok(ship);
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost("DeleteShip")]
+        public async Task<IActionResult> DeleteShip(Guid id)
+        {
+            try
+            {
+                await _deleteShipUseCase.Execute(id);
+                return NoContent();
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ShipDto>> Update(Guid id, [FromBody] UpdateShipDto updateShipDto)
+        {
+            try
+            {
+                ShipDto ship = await _updateShipUseCase.Execute(id, updateShipDto);
                 return Ok(ship);
             }
             catch (NotFoundException)

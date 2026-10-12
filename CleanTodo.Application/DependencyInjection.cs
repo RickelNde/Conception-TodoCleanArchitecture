@@ -2,6 +2,7 @@
 using CleanTodo.Application.UseCases;
 using CleanTodo.Application.UseCases;
 using CleanTodo.Application.UseCases.User;
+using CleanTodo.Application.Validators;
 using CleanTodo.Infrastructure.Services;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +28,9 @@ public static class DependencyInjection
         services.AddScoped<GetAllShipsUseCase>();
         services.AddScoped<GetShipUseCase>();
         services.AddScoped<CreateShipUseCase>();
+        services.AddScoped<DeleteShipUseCase>();
+        services.AddScoped<UpdateShipUseCase>();
+     
 
 
         return services;

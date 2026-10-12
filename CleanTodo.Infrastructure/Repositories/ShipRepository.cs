@@ -32,5 +32,22 @@ namespace CleanTodo.Infrastructure.Repositories
                 .Where(x => x.Id == id)
                 .SingleOrDefaultAsync();
         }
+
+        public async Task DeleteShip(Guid id)
+        {
+            var ship = await FindById(id);
+            if (ship is null)
+                return;
+
+            _context.Ships.Remove(ship);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Ship> UpdateShip(Ship ship)
+        {
+            _context.Ships.Update(ship);
+            await _context.SaveChangesAsync();
+            return ship;
+        }
     }
 }

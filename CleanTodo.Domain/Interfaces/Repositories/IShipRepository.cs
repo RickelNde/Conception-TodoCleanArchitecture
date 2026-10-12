@@ -10,5 +10,7 @@ namespace CleanTodo.Domain.Interfaces.Repositories
         Task<List<Ship>> GetAll();
         Task<Ship?> FindById(Guid id);
         Task<Ship> AddShip(Ship ship);
+        Task DeleteShip (Guid id);
+        Task<Ship> UpdateShip(Ship ship);
     }
 }
