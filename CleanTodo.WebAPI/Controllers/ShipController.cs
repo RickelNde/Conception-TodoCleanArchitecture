@@ -1,27 +1,30 @@
-﻿using CleanTodo.Application.UseCase;
-using CleanTodo.Application.UseCases;
+﻿
 using CleanTodo.Application.UseCases;
 using CleanTodo.Domain.DTOS;
 using CleanTodo.Domain.Exceptions;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace CleanTodo.API.Controllers
 {
 
     [ApiController]
     [Route("api/[controller]")]
-    public class ShipController(GetAllShipsUseCase getAllShipsUseCase,CreateShipUseCase createShipUseCase,UpdateShipUseCase updateShipUseCase, GetShipUseCase getShipUseCase,DeleteShipUseCase deleteShipUseCase) : ControllerBase
+    public class ShipController(GetAllShipsUseCase getAllShipsUseCase , IConfiguration config,DockShipUseCase dockShipUseCase, CreateShipUseCase createShipUseCase,UpdateShipUseCase updateShipUseCase, GetShipUseCase getShipUseCase,DeleteShipUseCase deleteShipUseCase) : ControllerBase
     {
         private GetAllShipsUseCase _getAllshipCase = getAllShipsUseCase;
      
         private CreateShipUseCase _createShipCase = createShipUseCase;
+        private DockShipUseCase _dockShipUseCase = dockShipUseCase;
 
         private GetShipUseCase _getShipCase = getShipUseCase;
 
         private DeleteShipUseCase _deleteShipUseCase = deleteShipUseCase;
         private UpdateShipUseCase _updateShipUseCase = updateShipUseCase;
 
+        private IConfiguration _config = config;
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ShipDto>>> GetAll()
         {
@@ -32,7 +35,7 @@ namespace CleanTodo.API.Controllers
         [HttpPost("CreateShip")]
         public async Task<ActionResult<ShipDto>> CreateShip([FromBody] CreateShipDto createShipDto,string createdBy)
         {
-            ShipDto ship = await createShipUseCase.Execute(createShipDto, createdBy);
+            ShipDto ship = await _createShipCase.Execute(createShipDto, createdBy);
 
             return CreatedAtAction(
                 nameof(GetId),
@@ -81,6 +84,27 @@ namespace CleanTodo.API.Controllers
             catch (NotFoundException)
             {
                 return NotFound();
+            }
+        }
+
+        [HttpPost("dock")]
+        public async Task<IActionResult> Dock([FromBody] DockShipDto dockShipDto)
+        {
+            string token = Request.Headers["Authorization"].ToString();
+
+            if (token != "Bearer " + _config["Broker:AppToken"])
+            {
+                return Unauthorized();
+            }
+
+            try
+            {
+                ShipDto ship = await _dockShipUseCase.Execute(dockShipDto);
+                return Ok(ship);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(ex.Errors.Select(e => new { e.PropertyName, e.ErrorMessage }));
             }
         }
     }
