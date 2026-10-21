@@ -12,7 +12,7 @@ namespace CleanTodo.API.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    public class ShipController(GetAllShipsUseCase getAllShipsUseCase , IConfiguration config,DockShipUseCase dockShipUseCase, CreateShipUseCase createShipUseCase,UpdateShipUseCase updateShipUseCase, GetShipUseCase getShipUseCase,DeleteShipUseCase deleteShipUseCase) : ControllerBase
+    public class ShipController(GetAllShipsUseCase getAllShipsUseCase,GetPortsUseCase getPortsUseCase,SendShipUseCase sendShipUseCase , IConfiguration config,DockShipUseCase dockShipUseCase, CreateShipUseCase createShipUseCase,UpdateShipUseCase updateShipUseCase, GetShipUseCase getShipUseCase,DeleteShipUseCase deleteShipUseCase) : ControllerBase
     {
         private GetAllShipsUseCase _getAllshipCase = getAllShipsUseCase;
      
@@ -23,6 +23,10 @@ namespace CleanTodo.API.Controllers
 
         private DeleteShipUseCase _deleteShipUseCase = deleteShipUseCase;
         private UpdateShipUseCase _updateShipUseCase = updateShipUseCase;
+
+        private GetPortsUseCase _getShipUseCase = getPortsUseCase;
+
+        private SendShipUseCase _sendShipUseCase = sendShipUseCase;
 
         private IConfiguration _config = config;
         [HttpGet]
@@ -90,21 +94,45 @@ namespace CleanTodo.API.Controllers
         [HttpPost("dock")]
         public async Task<IActionResult> Dock([FromBody] DockShipDto dockShipDto)
         {
-            string token = Request.Headers["Authorization"].ToString();
-
-            if (token != "Bearer " + _config["Broker:AppToken"])
-            {
-                return Unauthorized();
-            }
-
             try
             {
                 ShipDto ship = await _dockShipUseCase.Execute(dockShipDto);
                 return Ok(ship);
             }
-            catch (ValidationException ex)
+            catch (NotFoundException )
             {
-                return BadRequest(ex.Errors.Select(e => new { e.PropertyName, e.ErrorMessage }));
+                return NotFound();
+            }
+        }
+        [HttpGet("ports")]
+        public async Task<ActionResult<List<string>>> GetPorts()
+        {
+            try
+            {
+                var ports = await _getShipUseCase.ExecuteAsync();
+                return Ok(ports);
+            }
+            catch (HttpRequestException ex)
+            {
+                // l'API du prof a refusé (401, 404...) ou est injoignable
+                return StatusCode(502, new { error = ex.Message });
+            }
+           
+        }
+
+       
+        [HttpPost("sail/{destination}")]
+        public async Task<IActionResult> Sail(string destination)
+        {
+            try
+            {
+                await _sendShipUseCase.ExecuteAsync(destination);
+                return Ok(new { message = $"Bateau envoyé vers {destination}" });
+
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
             }
         }
     }

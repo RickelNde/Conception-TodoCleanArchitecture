@@ -34,4 +34,4 @@ namespace CleanTodo.Application.UseCases
             return new ShipDto(ship);
         }
     }
-}
+}//git rm --cached appsetting.dev.json

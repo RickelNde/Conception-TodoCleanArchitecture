@@ -1,8 +1,10 @@
 ﻿using CleanTodo.Domain.Interfaces.Repositories;
+using CleanTodo.Infrastructure.GateWay;
 using CleanTodo.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http.Json;
 
 namespace CleanTodo.Infrastructure;
 
@@ -25,6 +27,8 @@ public static class DependencyInjection
         services.AddScoped<ITodoRepository, TodoRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IShipRepository, ShipRepository>();
+
+        
         return services;
     }
 }
