@@ -2,10 +2,7 @@
 using CleanTodo.Application.UseCases;
 using CleanTodo.Domain.DTOS;
 using CleanTodo.Domain.Exceptions;
-using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace CleanTodo.API.Controllers
 {
@@ -24,12 +21,12 @@ namespace CleanTodo.API.Controllers
         private DeleteShipUseCase _deleteShipUseCase = deleteShipUseCase;
         private UpdateShipUseCase _updateShipUseCase = updateShipUseCase;
 
-        private GetPortsUseCase _getShipUseCase = getPortsUseCase;
+        private GetPortsUseCase _getPortsUseCase = getPortsUseCase;
 
         private SendShipUseCase _sendShipUseCase = sendShipUseCase;
 
         private IConfiguration _config = config;
-        [HttpGet]
+        [HttpGet("GetAllShipsv ")]
         public async Task<ActionResult<IEnumerable<ShipDto>>> GetAll()
         {
             var ships = await _getAllshipCase.Execute();
@@ -77,7 +74,7 @@ namespace CleanTodo.API.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("UpdateShip")]
         public async Task<ActionResult<ShipDto>> Update(Guid id, [FromBody] UpdateShipDto updateShipDto)
         {
             try
@@ -109,31 +106,31 @@ namespace CleanTodo.API.Controllers
         {
             try
             {
-                var ports = await _getShipUseCase.ExecuteAsync();
+                var ports = await _getPortsUseCase.ExecuteAsync();
                 return Ok(ports);
             }
             catch (HttpRequestException ex)
             {
-                // l'API du prof a refusé (401, 404...) ou est injoignable
                 return StatusCode(502, new { error = ex.Message });
             }
-           
         }
 
-       
-        [HttpPost("sail/{destination}")]
-        public async Task<IActionResult> Sail(string destination)
+        [HttpPost("{id}/sail/{destination}")]
+        public async Task<IActionResult> Sail(Guid id, string destination)
         {
             try
             {
-                await _sendShipUseCase.ExecuteAsync(destination);
-                return Ok(new { message = $"Bateau envoyé vers {destination}" });
+                var success = await _sendShipUseCase.ExecuteAsync(id, destination);
+                if (!success)
+                    return BadRequest(new { message = "Impossible d'envoyer le navire (port plein ou en réparation ?)." });
 
+                return Ok(new { message = "Le navire a été envoyé avec succès !" });
             }
             catch (NotFoundException)
             {
                 return NotFound();
             }
+           
         }
     }
 }

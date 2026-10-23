@@ -1,6 +1,8 @@
 ﻿using CleanTodo.Domain.DTOS;
 using CleanTodo.Domain.Interfaces.Repositories;
+using System.Linq;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace CleanTodo.Infrastructure.GateWay
 {
@@ -15,18 +17,15 @@ namespace CleanTodo.Infrastructure.GateWay
 
         public async Task<List<string>> GetPortsAsync()
         {
-            var response = await _httpClient.GetAsync("api/users");
-   
-            response.EnsureSuccessStatusCode();
-            var ports = await response.Content.ReadFromJsonAsync<List<string>>();
-            return ports ?? new List<string>();
+            var json = await _httpClient.GetFromJsonAsync<JsonElement>("api/users");
+            return json.GetProperty("users").Deserialize<List<string>>()!;
         }
 
-        public async Task SendShipAsync(string destination)
+        public async Task<bool> SendShipAsync(DockShipDto ship, string destination)
         {
-            var response = await _httpClient.PostAsync(
-                $"api/ship/sail/{Uri.EscapeDataString(destination)}", null);
-            response.EnsureSuccessStatusCode();
+            var response = await _httpClient.PostAsJsonAsync($"api/ship/sail/{destination}", ship);
+
+            return response.IsSuccessStatusCode;
         }
     }
 }

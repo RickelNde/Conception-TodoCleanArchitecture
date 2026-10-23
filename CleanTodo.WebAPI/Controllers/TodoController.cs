@@ -4,7 +4,6 @@ using CleanTodo.Domain.DTOS;
 using CleanTodo.Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static System.Net.WebRequestMethods;
 
 [ApiController]
 [Route("api/[controller]")]

@@ -27,9 +27,8 @@ builder.Services.AddHttpClient<IBrokerGateWay, BrokerGateWay>(client =>
     client.BaseAddress = new Uri(builder.Configuration["Broker:BaseUrl"]!);
     client.Timeout = TimeSpan.FromSeconds(30);
     client.DefaultRequestHeaders.Add("Accept", "application/json");
-    client.DefaultRequestHeaders.Authorization =
-        new AuthenticationHeaderValue("Bearer", builder.Configuration["Broker:AppToken"]);
-    client.DefaultRequestHeaders.Add("AppId", builder.Configuration["Broker:AppId"]);
+    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", builder.Configuration["Broker:AppToken"]);
+    client.DefaultRequestHeaders.Add("x-client-id", builder.Configuration["Broker:AppId"]);
 });
 
 // Add Controllers

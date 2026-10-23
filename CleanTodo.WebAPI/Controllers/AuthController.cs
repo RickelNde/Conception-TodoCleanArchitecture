@@ -1,14 +1,8 @@
 ﻿using CleanTodo.Application.UseCase;
 using CleanTodo.Application.UseCases.User;
 using CleanTodo.Domain.DTOS;
-using CleanTodo.Domain.Exceptions;
 using CleanTodo.Infrastructure.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace CleanTodo.API.Controllers
 {

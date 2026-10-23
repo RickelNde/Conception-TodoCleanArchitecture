@@ -8,6 +8,6 @@ namespace CleanTodo.Domain.Interfaces.Repositories
     public interface IBrokerGateWay
     {
         Task<List<string>> GetPortsAsync();
-        Task SendShipAsync(string destination);
+        Task<bool> SendShipAsync(DockShipDto ship, string destination);
     }
 }
