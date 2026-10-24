@@ -26,7 +26,7 @@ namespace CleanTodo.API.Controllers
         private SendShipUseCase _sendShipUseCase = sendShipUseCase;
 
         private IConfiguration _config = config;
-        [HttpGet("GetAllShipsv ")]
+        [HttpGet("GetAllShips")]
         public async Task<ActionResult<IEnumerable<ShipDto>>> GetAll()
         {
             var ships = await _getAllshipCase.Execute();
