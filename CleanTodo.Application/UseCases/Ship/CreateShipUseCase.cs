@@ -18,6 +18,11 @@ namespace CleanTodo.Application.UseCases
         }
         public async Task<ShipDto> Execute(CreateShipDto createShipDto, string createdBy)
         {
+            var ships= await _shipRepository.GetAll();
+            if (ships.Count >= 8)
+            {
+                throw new InvalidOperationException("Le port est plein.");
+            }
             await _validator.ValidateAndThrowAsync(createShipDto);
 
             var ship = new Ship(

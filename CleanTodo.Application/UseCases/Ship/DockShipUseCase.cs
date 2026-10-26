@@ -19,6 +19,12 @@ namespace CleanTodo.Application.UseCases
         public async Task<ShipDto> Execute(DockShipDto dto)
         {
             await _validator.ValidateAndThrowAsync(dto);
+            var ships = await _shipRepository.GetAll();
+            if (ships.Count >= 8)
+            {
+                throw new InvalidOperationException("impossible de recevoir des bateau le port est plein");
+            }
+            else { 
 
             var ship = new Ship(dto.Name, dto.Captain, dto.CrewSize, dto.GoldCargo, dto.CreatedBy);
             ship.Status = "docked";
@@ -28,10 +34,14 @@ namespace CleanTodo.Application.UseCases
                 ship.CreatedAt = dto.CreatedAt;
             }
             ship.LastModified = DateTime.UtcNow;
+            
+            
 
             await _shipRepository.AddShip(ship);
+            
 
             return new ShipDto(ship);
+            }
         }
     }
 }//git rm --cached appsetting.dev.json

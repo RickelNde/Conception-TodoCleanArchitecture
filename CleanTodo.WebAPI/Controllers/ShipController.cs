@@ -2,6 +2,7 @@
 using CleanTodo.Application.UseCases;
 using CleanTodo.Domain.DTOS;
 using CleanTodo.Domain.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanTodo.API.Controllers
@@ -25,14 +26,14 @@ namespace CleanTodo.API.Controllers
 
         private SendShipUseCase _sendShipUseCase = sendShipUseCase;
 
-        private IConfiguration _config = config;
+        [Authorize]
         [HttpGet("GetAllShips")]
         public async Task<ActionResult<IEnumerable<ShipDto>>> GetAll()
         {
             var ships = await _getAllshipCase.Execute();
             return Ok(ships);
         }
-
+        [Authorize]
         [HttpPost("CreateShip")]
         public async Task<ActionResult<ShipDto>> CreateShip([FromBody] CreateShipDto createShipDto,string createdBy)
         {
@@ -45,7 +46,7 @@ namespace CleanTodo.API.Controllers
 
         }
 
-
+        [Authorize]
         [HttpGet("GetShipId")]
         public async Task<IActionResult> GetId(Guid id)
         {
@@ -59,7 +60,7 @@ namespace CleanTodo.API.Controllers
                 return NotFound();
             }
         }
-
+        [Authorize]
         [HttpPost("DeleteShip")]
         public async Task<IActionResult> DeleteShip(Guid id)
         {
@@ -73,7 +74,7 @@ namespace CleanTodo.API.Controllers
                 return NotFound();
             }
         }
-
+        [Authorize]
         [HttpPut("UpdateShip")]
         public async Task<ActionResult<ShipDto>> Update(Guid id, [FromBody] UpdateShipDto updateShipDto)
         {
@@ -101,6 +102,7 @@ namespace CleanTodo.API.Controllers
                 return NotFound();
             }
         }
+        [Authorize]
         [HttpGet("ports")]
         public async Task<ActionResult<List<string>>> GetPorts()
         {
@@ -114,7 +116,7 @@ namespace CleanTodo.API.Controllers
                 return StatusCode(502, new { error = ex.Message });
             }
         }
-
+        [Authorize]
         [HttpPost("{id}/sail/{destination}")]
         public async Task<IActionResult> Sail(Guid id, string destination)
         {
@@ -129,7 +131,7 @@ namespace CleanTodo.API.Controllers
             catch (NotFoundException)
             {
                 return NotFound();
-            }
+            }//test la limite des bateaux 
            
         }
     }
