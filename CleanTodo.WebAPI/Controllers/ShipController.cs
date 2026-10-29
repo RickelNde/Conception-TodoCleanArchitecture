@@ -7,7 +7,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CleanTodo.API.Controllers
 {
-
+/// <summary>
+/// Constructeur du controller
+/// </summary>
+/// <param name="getAllShipsUseCase"></param>
+/// <param name="getPortsUseCase"></param>
+/// <param name="config"></param>
+/// <param name="sendShipUseCase"></param>
+/// <param name="dockShipUseCase"></param>
+/// <param name="createShipUseCase"></param>
+/// <param name="updateShipUseCase"></param>
+/// <param name="getShipUseCase"></param>
+/// <param name="deleteShipUseCase"></param>
     [ApiController]
     [Route("api/[controller]")]
     public class ShipController(GetAllShipsUseCase getAllShipsUseCase,GetPortsUseCase getPortsUseCase, IConfiguration config, SendShipUseCase sendShipUseCase ,DockShipUseCase dockShipUseCase, CreateShipUseCase createShipUseCase,UpdateShipUseCase updateShipUseCase, GetShipUseCase getShipUseCase,DeleteShipUseCase deleteShipUseCase) : ControllerBase
