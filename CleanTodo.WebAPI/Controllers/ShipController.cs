@@ -92,12 +92,13 @@ namespace CleanTodo.API.Controllers
         [HttpPost("dock")]
         public async Task<IActionResult> Dock([FromBody] DockShipDto dockShipDto)
         {
-            var clientId = Request.Headers["client-id"].ToString();
-            var appToken = Request.Headers["app-token"].ToString();
+            var authorization = Request.Headers["Authorization"].ToString();
 
-            if (clientId != _config["Broker:AppId"] || appToken != _config["Broker:AppToken"])
+            var appToken = _config["Broker:AppToken"];
+
+            if (authorization != $"Bearer {appToken}")
             {
-                return Unauthorized(new { message = "client-id ou app-token invalide." });
+                return Unauthorized(new { message = "App token invalide." });
             }
 
             try
