@@ -1,0 +1,32 @@
+name: Tests ShipTest
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: "10.0.x"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore TodoApplicationTests/TodoApplicationTests.csproj
+
+      - name: Build
+        run: dotnet build TodoApplicationTests/TodoApplicationTests.csproj -c Release --no-restore
+
+      - name: Run ShipTest
+        run: >
+          dotnet test TodoApplicationTests/TodoApplicationTests.csproj
+          -c Release --no-build --verbosity normal
+          --filter "FullyQualifiedName~ShipTest"
