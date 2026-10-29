@@ -10,10 +10,10 @@ namespace CleanTodo.API.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    public class ShipController(GetAllShipsUseCase getAllShipsUseCase,GetPortsUseCase getPortsUseCase,SendShipUseCase sendShipUseCase , IConfiguration config,DockShipUseCase dockShipUseCase, CreateShipUseCase createShipUseCase,UpdateShipUseCase updateShipUseCase, GetShipUseCase getShipUseCase,DeleteShipUseCase deleteShipUseCase) : ControllerBase
+    public class ShipController(GetAllShipsUseCase getAllShipsUseCase,GetPortsUseCase getPortsUseCase, IConfiguration config, SendShipUseCase sendShipUseCase ,DockShipUseCase dockShipUseCase, CreateShipUseCase createShipUseCase,UpdateShipUseCase updateShipUseCase, GetShipUseCase getShipUseCase,DeleteShipUseCase deleteShipUseCase) : ControllerBase
     {
         private GetAllShipsUseCase _getAllshipCase = getAllShipsUseCase;
-     
+        private IConfiguration _config = config;
         private CreateShipUseCase _createShipCase = createShipUseCase;
         private DockShipUseCase _dockShipUseCase = dockShipUseCase;
 
@@ -92,12 +92,20 @@ namespace CleanTodo.API.Controllers
         [HttpPost("dock")]
         public async Task<IActionResult> Dock([FromBody] DockShipDto dockShipDto)
         {
+            var clientId = Request.Headers["client-id"].ToString();
+            var appToken = Request.Headers["app-token"].ToString();
+
+            if (clientId != _config["Broker:AppId"] || appToken != _config["Broker:AppToken"])
+            {
+                return Unauthorized(new { message = "client-id ou app-token invalide." });
+            }
+
             try
             {
                 ShipDto ship = await _dockShipUseCase.Execute(dockShipDto);
                 return Ok(ship);
             }
-            catch (NotFoundException )
+            catch (NotFoundException)
             {
                 return NotFound();
             }
@@ -131,7 +139,7 @@ namespace CleanTodo.API.Controllers
             catch (NotFoundException)
             {
                 return NotFound();
-            }//test la limite des bateaux 
+            } 
            
         }
     }

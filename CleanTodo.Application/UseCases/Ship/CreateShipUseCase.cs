@@ -26,7 +26,7 @@ namespace CleanTodo.Application.UseCases
             await _validator.ValidateAndThrowAsync(createShipDto);
 
             var ship = new Ship(
-                createShipDto.Name,
+                createShipDto.Name, 
                 createShipDto.Captain,
                 createShipDto.CrewSize,
                 createShipDto.GoldCargo,
