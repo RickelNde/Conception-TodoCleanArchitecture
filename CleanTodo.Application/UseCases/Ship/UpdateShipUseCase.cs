@@ -31,7 +31,6 @@ namespace CleanTodo.Application.UseCases
             ship.Captain = dto.Captain;
             ship.CrewSize = dto.CrewSize;
             ship.GoldCargo = dto.GoldCargo;
-            ship.Status = dto.Status;
             ship.LastModified = DateTime.UtcNow;
 
             await _shipRepository.UpdateShip(ship);

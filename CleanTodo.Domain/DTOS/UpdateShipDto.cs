@@ -11,7 +11,6 @@ namespace CleanTodo.Domain.DTOS
         public string Captain { get; set; } 
         public int CrewSize { get; set; }
         public int GoldCargo { get; set; }
-        public string Status { get; set; }
 
 
         public UpdateShipDto() { }
@@ -22,7 +21,7 @@ namespace CleanTodo.Domain.DTOS
             Captain = ship.Captain;
             CrewSize = ship.CrewSize;
             GoldCargo = ship.GoldCargo;
-            Status = ship.Status;
+           
         }
     }
 }

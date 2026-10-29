@@ -25,10 +25,6 @@ namespace CleanTodo.Application.Validators
             RuleFor(x => x.GoldCargo)
                 .InclusiveBetween(0, 1_000_000);
 
-            RuleFor(x => x.Status)
-             .NotEmpty()
-             .Must(s => s == "Docked" || s == "sailing")
-             .WithMessage("Le statut doit être 'Docked' ou 'sailing'.");
         }
     }
 }
